@@ -1,0 +1,11 @@
+
+
+The layer will provide multiple options to client to interact with the system
+such as
+
+Notification Controller will handle notification sending logic (will call service)
+Status Controller will provide status of message - 
+delivered, opened, sending, fail etc.
+Template Controller will decide the template of message to be sent like if message is about availability of new
+    product(This will be provided by the client) so which message template to choose. Also, no template or based
+    on message channel type it will be configured sms, email etc.

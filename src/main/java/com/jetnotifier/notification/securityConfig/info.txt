@@ -1,0 +1,9 @@
+
+
+	This file could contain the Spring Boot Configuration classes
+	to validate incoming requests
+	
+	See and Explore more about how we can give access to system
+	by using API key for more secure authorization;
+	
+	
