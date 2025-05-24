@@ -1,0 +1,10 @@
+	
+	
+	
+	- try to implement one or more consumer group where two consumer from
+	different group should consume same partition.(May be for different purpose)
+	
+	
+	
+	
+	

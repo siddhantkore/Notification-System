@@ -1,11 +1,12 @@
 package com.jetnotifier.notification.domain.entity.template;
 
-import jakarta.persistence.Entity;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.Data;
 
 
 
-@Entity
+@Document
 @Data
 public class EmailNotificationTemplate {
 	

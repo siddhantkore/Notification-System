@@ -5,9 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jetnotifier.notification.domain.entity.Notification;
 
-import jakarta.persistence.Id;
-
 @Repository
-public interface NotificationRepository extends MongoRepository<Notification, Id> {
+public interface NotificationRepository extends MongoRepository<Notification, String> {
 	
 }
