@@ -149,7 +149,7 @@ application-local.properties
 application-secrets.yml
 application-secrets.properties
 *.properties
-*.yml
+application.yml
 *.class
 
 # Temporary folders
@@ -171,3 +171,9 @@ uploads/
 *.p12
 *.jks
 *.keystore
+/.apt_generated_tests/
+
+
+*.groovy
+Jenkinsfile
+

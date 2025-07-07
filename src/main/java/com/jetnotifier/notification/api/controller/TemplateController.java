@@ -1,38 +1,61 @@
 package com.jetnotifier.notification.api.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.jetnotifier.notification.domain.entity.Template;
+import com.jetnotifier.notification.service.TemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
-@RequestMapping("api/jetnotifier/template")
+@RequestMapping("/api/templates")
+@CrossOrigin(origins = "*")
 public class TemplateController {
-	
-	@GetMapping("/all")
-	public Template getAllTemplates() {
-		return null;
-//	ref->	package com.jetnotifier.notification.domain.entity;
-//
-//		public class Template {
-//			// will store template info but GUI creation is separate 
-//		}
-	}
-	
-	public Template getTemplate(String templateId) {
-		return null;
-	}
-	
-	public void addTemplate(Template template) {
-		// add the template in the database after validating & only admin can do this 
-	}
-	
-	public void removeTemplate (Template template ) {
-		// it is also can only done by admin only
-	}
-	
+
+    @Autowired
+    private TemplateService templateService;
+
+    @GetMapping
+    public ResponseEntity<Page<Template>> getAllTemplates(Pageable pageable) {
+        Page<Template> templates = templateService.getAllTemplates(pageable);
+        return ResponseEntity.ok(templates);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Template> getTemplate(@PathVariable String id) {
+        Template template = templateService.getTemplateById(id);
+        return ResponseEntity.ok(template);
+    }
+
+    @PostMapping
+    public ResponseEntity<Template> createTemplate
+    	(@Valid @RequestBody Template template) {
+    	
+        Template created = templateService.createTemplate(template);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Template> updateTemplate
+    	(@PathVariable String id, @Valid @RequestBody Template template) {
+    	
+        Template updated = templateService.updateTemplate(id, template);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTemplate(@PathVariable String id) {
+        templateService.deleteTemplate(id);
+        return ResponseEntity.ok("Template deleted successfully");
+    }
+
+    @GetMapping("/type/{type}")
+    public ResponseEntity<Page<Template>> getTemplatesByType(@PathVariable String type, Pageable pageable) {
+        Page<Template> templates = templateService.getTemplatesByType(type, pageable);
+        return ResponseEntity.ok(templates);
+    }
+    
+    
 }

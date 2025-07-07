@@ -1,41 +1,44 @@
 package com.jetnotifier.notification.api.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.jetnotifier.notification.domain.entity.NotificationPreference;
+import com.jetnotifier.notification.service.PreferenceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
-@RequestMapping("api/jetnotifier/preference")
+@RequestMapping("/api/preferences")
+@CrossOrigin(origins = "*")
 public class PreferenceController {
 
-   @GetMapping("/user/{userid}")
-   public NotificationPreference getUserPreference(@PathVariable String userid) {
-       // fetch from DB
-       return null;
-   }
+    @Autowired
+    private PreferenceService preferenceService;
 
-   @PutMapping("/user/{userid}")
-   public void updateUserPreference(@PathVariable String userid, @RequestBody NotificationPreference pref) {
-       // save to DB
-   }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<NotificationPreference>> getUserPreferences(@PathVariable String userId) {
+        List<NotificationPreference> preferences = preferenceService.getUserPreferences(userId);
+        return ResponseEntity.ok(preferences);
+    }
 
-   @GetMapping("/client/{clientid}")
-   public NotificationPreference getClientPreference(@PathVariable String clientid) {
-       return null;
-   }
+    @PostMapping
+    public ResponseEntity<NotificationPreference> createPreference(@Valid @RequestBody NotificationPreference preference) {
+        NotificationPreference created = preferenceService.createPreference(preference);
+        return ResponseEntity.ok(created);
+    }
 
-   @PutMapping("/client/{clientid}")
-   public void updateClientPreference(@PathVariable String clientid, @RequestBody NotificationPreference pref) {
-       // save to DB
-   }
+    @PutMapping("/{id}")
+    public ResponseEntity<NotificationPreference> updatePreference(
+            @PathVariable String id, 
+            @Valid @RequestBody NotificationPreference preference) {
+        NotificationPreference updated = preferenceService.updatePreference(id, preference);
+        return ResponseEntity.ok(updated);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePreference(@PathVariable String id) {
+        preferenceService.deletePreference(id);
+        return ResponseEntity.ok("Preference deleted successfully");
+    }
 }
-
