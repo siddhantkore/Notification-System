@@ -1,3 +1,4 @@
+
 #FROM maven:3.9.6-openjdk-17-slim AS build
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
@@ -21,8 +22,12 @@ RUN mvn clean package -DskipTests
 #FROM openjdk:17-jre-slim
 FROM eclipse-temurin:21-jre
 
+LABEL maintainer="megastorage2112@gmail.com"
+LABEL version="1.0.0"
+LABEL description="Notification System Service"
+
 # Create app user for better security
-RUN addgroup --system appgroup && adduser --system --group appuser
+RUN addgroup --system SpringAppGroup && adduser --system --group SpringAppUser
 
 # Set working directory
 WORKDIR /app
@@ -31,10 +36,10 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Change ownership
-RUN chown -R appuser:appgroup /app
+RUN chown -R SpringAppUser:SpringAppGroup /app
 
 # Switch to non-root user
-USER appuser
+USER SpringAppUser
 
 # Expose port
 EXPOSE 8080
@@ -45,4 +50,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
