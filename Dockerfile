@@ -22,7 +22,6 @@ RUN mvn clean package -DskipTests
 #FROM openjdk:17-jre-slim
 FROM eclipse-temurin:21-jre
 
-LABEL maintainer="megastorage2112@gmail.com"
 LABEL version="1.0.0"
 LABEL description="Notification System Service"
 

@@ -41,9 +41,9 @@ pipeline {
 
         stage('Run Development Environment (Main Branch Only)') {
 
-//            when {
-//                branch 'main' // This stage only runs for the 'main' branch
-//            }
+            when {
+                branch 'main' // This stage only runs for the 'main' branch
+            }
             steps {
                 script {
                     echo "Running Docker Compose for development environment..."
