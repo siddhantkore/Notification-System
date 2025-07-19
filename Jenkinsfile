@@ -5,7 +5,7 @@ pipeline {
 
     environment {
 
-        // Define the name for your Docker image
+        // Define the name of Docker image
         DOCKER_IMAGE_NAME = "notification-service"
 
         // Get the current Git branch name
@@ -51,7 +51,7 @@ pipeline {
                     sh 'docker-compose -f docker-compose.yml up -d --build --force-recreate'
 
                     echo "Waiting for services to become healthy (might take a few minutes)..."
-                    sleep 60 // Wait for 60 seconds
+                    sleep 60
                     sh 'docker ps'
                     
                     echo "Development environment brought up. You can access services via specified ports locally."
@@ -66,13 +66,12 @@ pipeline {
         always {
             script {
 
-                // We'll check if the 'main' branch was the one that triggered the build for this cleanup.
                 if ("${BRANCH_NAME}" == "main") {
                     echo "Cleaning up Docker Compose services..."
                     sh 'docker-compose -f docker-compose.yml down'
                     echo "Docker Compose services cleaned up."
                 }
-                // Optionally remove the built Docker image
+
                 echo "Cleaning up local Docker image: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
                 sh 'docker-compose -f docker-compose.yml down'
 
