@@ -13,6 +13,11 @@ public class StatusController {
     @Autowired
     private StatusService statusService;
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @GetMapping("/notification/{id}")
     public ResponseEntity<Map<String, Object>> getNotificationStatus(@PathVariable String id) {
         Map<String, Object> status = statusService.getNotificationStatus(id);
@@ -21,6 +26,11 @@ public class StatusController {
 
 
 
+    /**
+     * 
+     * @param userId
+     * @return
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getUserNotificationStats(@PathVariable String userId) {
 
@@ -31,6 +41,10 @@ public class StatusController {
     }
 
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping("/system")
     public ResponseEntity<Map<String, Object>> getSystemStatus() {
         Map<String, Object> systemStatus = statusService.getSystemStatus();

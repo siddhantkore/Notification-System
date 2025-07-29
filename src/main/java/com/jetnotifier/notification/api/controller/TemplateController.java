@@ -17,18 +17,33 @@ public class TemplateController {
     @Autowired
     private TemplateService templateService;
 
+    /**
+     * 
+     * @param pageable
+     * @return
+     */
     @GetMapping
     public ResponseEntity<Page<Template>> getAllTemplates(Pageable pageable) {
         Page<Template> templates = templateService.getAllTemplates(pageable);
         return ResponseEntity.ok(templates);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Template> getTemplate(@PathVariable String id) {
         Template template = templateService.getTemplateById(id);
         return ResponseEntity.ok(template);
     }
 
+    /**
+     * 
+     * @param template
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Template> createTemplate
     	(@Valid @RequestBody Template template) {
@@ -37,6 +52,12 @@ public class TemplateController {
         return ResponseEntity.ok(created);
     }
 
+    /**
+     * 
+     * @param id
+     * @param template
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Template> updateTemplate
     	(@PathVariable String id, @Valid @RequestBody Template template) {
@@ -45,12 +66,23 @@ public class TemplateController {
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTemplate(@PathVariable String id) {
         templateService.deleteTemplate(id);
         return ResponseEntity.ok("Template deleted successfully");
     }
 
+    /**
+     * 
+     * @param type
+     * @param pageable
+     * @return
+     */
     @GetMapping("/type/{type}")
     public ResponseEntity<Page<Template>> getTemplatesByType(@PathVariable String type, Pageable pageable) {
         Page<Template> templates = templateService.getTemplatesByType(type, pageable);

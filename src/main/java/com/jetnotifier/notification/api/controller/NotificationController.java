@@ -19,6 +19,12 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * 
+     * @param request  NotificationRequest
+     * @return
+     * @route /api/notifications/
+     */
     @PostMapping
     public ResponseEntity<NotificationResponse> createNotification(@Valid @RequestBody NotificationRequest request) {
 
@@ -27,6 +33,12 @@ public class NotificationController {
     
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     * @route api/notifications/{id}
+     */
     @GetMapping("/{id}")
     public ResponseEntity<NotificationResponse> getNotification(@PathVariable String id) {
 
@@ -34,18 +46,37 @@ public class NotificationController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 
+     * @param userId
+     * @return
+     * @route /api/notifications/user/{userId}
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationResponse>> getUserNotifications(@PathVariable String userId) {
         List<NotificationResponse> notifications = notificationService.getNotificationsByUserId(userId);
         return ResponseEntity.ok(notifications);
     }
 
+    /**
+     * 
+     * @param pageable
+     * @return
+     * @route /api/notifications/
+     */
     @GetMapping
     public ResponseEntity<Page<NotificationResponse>> getAllNotifications(Pageable pageable) {
         Page<NotificationResponse> notifications = notificationService.getAllNotifications(pageable);
         return ResponseEntity.ok(notifications);
     }
 
+    /**
+     * 
+     * @param id
+     * @param status
+     * @return
+     * @route /api/notifications/{id}/status
+     */
     @PutMapping("/{id}/status")
     public ResponseEntity<String> updateNotificationStatus (
             @PathVariable String id, 
@@ -55,6 +86,12 @@ public class NotificationController {
         return ResponseEntity.ok("Notification status updated");
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     * @route /api/notifications/{id}
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteNotification(@PathVariable String id) {
         notificationService.deleteNotification(id);

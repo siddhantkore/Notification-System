@@ -16,18 +16,35 @@ public class PreferenceController {
     @Autowired
     private PreferenceService preferenceService;
 
+    /**
+     * 
+     * 
+     * @param userId
+     * @return
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationPreference>> getUserPreferences(@PathVariable String userId) {
         List<NotificationPreference> preferences = preferenceService.getUserPreferences(userId);
         return ResponseEntity.ok(preferences);
     }
 
+    /**
+     * 
+     * @param preference
+     * @return
+     */
     @PostMapping
     public ResponseEntity<NotificationPreference> createPreference(@Valid @RequestBody NotificationPreference preference) {
         NotificationPreference created = preferenceService.createPreference(preference);
         return ResponseEntity.ok(created);
     }
 
+    /**
+     * 
+     * @param id
+     * @param preference
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<NotificationPreference> updatePreference(
             @PathVariable String id, 
@@ -36,6 +53,11 @@ public class PreferenceController {
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePreference(@PathVariable String id) {
         preferenceService.deletePreference(id);
