@@ -1,35 +1,54 @@
 package com.jetnotifier.notification.api.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.jetnotifier.notification.service.StatusService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
-import com.jetnotifier.notification.domain.enums.NotificationStatus;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
-@RequestMapping("api/jetnotifier/status")
+@RequestMapping("/api/status")
 public class StatusController {
-	
-	
-	
-	
-	@GetMapping
-	public String getStatus(@RequestParam String userid, @RequestParam String clientid) { // 
-		return "will send pending, sent, failed status of a resuest";
-	}
-	
-	
-	public String getNotificationStatus(@RequestParam String notificationid) {
-		// looking for it still configuring 
-		return "give the status of a message by notification id if has";
-	}
-	// many more like
-		// all stats about a client
-		// all stats about a user
-	
-	
+
+    @Autowired
+    private StatusService statusService;
+
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/notification/{id}")
+    public ResponseEntity<Map<String, Object>> getNotificationStatus(@PathVariable String id) {
+        Map<String, Object> status = statusService.getNotificationStatus(id);
+        return ResponseEntity.ok(status);
+    }
+
+
+
+    /**
+     * 
+     * @param userId
+     * @return
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Map<String, Object>> getUserNotificationStats(@PathVariable String userId) {
+
+        Map<String, Object> stats = statusService.getUserNotificationStats(userId);
+        
+        return ResponseEntity.ok(stats);
+    
+    }
+
+
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/system")
+    public ResponseEntity<Map<String, Object>> getSystemStatus() {
+        Map<String, Object> systemStatus = statusService.getSystemStatus();
+        return ResponseEntity.ok(systemStatus);
+    }
+    
 }

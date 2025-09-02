@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetNotifier - Enterprise Notification System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #0A2C4D;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0A2C4D 0%, #1a3c5d 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(54, 141, 140, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0A2C4D 0%, #1a3c5d 50%, #2a4c6d 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(54,141,140,0.1)"/><stop offset="100%" style="stop-color:rgba(54,141,140,0)"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, white, #368D8C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero-tagline {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: slideInLeft 1s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            opacity: 0.8;
+            animation: slideInLeft 1s ease-out 0.4s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: slideInLeft 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            color: white;
+            box-shadow: 0 4px 20px rgba(54, 141, 140, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(54, 141, 140, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid #368D8C;
+        }
+
+        .btn-secondary:hover {
+            background: #368D8C;
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: slideInRight 1s ease-out 0.8s both;
+        }
+
+        .notification-demo {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .notification-item {
+            background: rgba(255, 255, 255, 0.9);
+            color: #0A2C4D;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: #E9ECF1;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #0A2C4D;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(10, 44, 77, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(54, 141, 140, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(10, 44, 77, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #0A2C4D;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Statistics Section */
+        .stats {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #0A2C4D 0%, #1a3c5d 100%);
+            color: white;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: #E9ECF1;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .contact-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(10, 44, 77, 0.1);
+        }
+
+        .developer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .developer-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(45deg, #368D8C, #4a9f9e);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .developer-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(54, 141, 140, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0A2C4D;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .developer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">JetNotifier</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#stats">Performance</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>JetNotifier</h1>
+                <p class="hero-tagline">Empower your systems. Ensure every message matters.</p>
+                <p class="hero-description">
+                    Transform your communication infrastructure with our enterprise-grade notification system. 
+                    Built on Apache Kafka for unmatched reliability, scalability, and real-time message tracking.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="notification-demo">
+                    <div class="notification-item">
+                        <div class="notification-icon">✓</div>
+                        <div>
+                            <strong>Order Confirmed</strong><br>
+                            <small>Delivered via Kafka</small>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon">📧</div>
+                        <div>
+                            <strong>Email Sent</strong><br>
+                            <small>Tracked & Verified</small>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon">🔔</div>
+                        <div>
+                            <strong>Push Notification</strong><br>
+                            <small>Real-time Delivery</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="section-title">How JetNotifier Transforms Your Communication</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Effortless Integration</h3>
+                    <p>Simply hit our API endpoint with your notification object. No more custom notification logic within your applications. Let JetNotifier handle the complexity while you focus on your core business.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Asynchronous & Reliable</h3>
+                    <p>Built on Apache Kafka for guaranteed message delivery at scale. Whether your consumers are real-time applications or batch processors, our distributed streaming ensures availability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Comprehensive Tracking</h3>
+                    <p>Gain full visibility into every notification's lifecycle. Track message availability, delivery status, and consumption with detailed analytics and audit trails.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Scalability & Resilience</h3>
+                    <p>Handle massive volumes of notifications with fault-tolerant architecture. Your critical communications always get through, even under heavy load.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Focus on Core Business</h3>
+                    <p>Offload notification complexities to JetNotifier. Your development teams can focus on building core business logic instead of managing notification infrastructure.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-level security with end-to-end encryption, secure API endpoints, and compliance with industry standards. Your data stays protected at every step.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats" id="stats">
+        <div class="stats-container">
+            <h2 class="section-title">Performance That Speaks</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime Guarantee</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Messages Per Hour</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">&lt;50ms</div>
+                    <div class="stat-label">Average Response Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Real-time Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="contact-container">
+            <div class="contact-content">
+                <h2 class="section-title">Ready to Streamline Your Notifications?</h2>
+                <p>Connect your systems to JetNotifier and experience a new level of control, reliability, and efficiency in your organizational communications.</p>
+                
+                <div class="developer-links">
+                    <a href="https://linkedin.com/in/siddhantkore0bb" class="developer-link" target="_blank">
+                        <span>💼</span>
+                        LinkedIn
+                    </a>
+                    <a href="https://github.com/siddhantkore" class="developer-link" target="_blank">
+                        <span>🐙</span>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 JetNotifier. Built with precision for enterprise communication.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect for header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(10, 44, 77, 0.95)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, #0A2C4D 0%, #1a3c5d 100%)';
+            }
+        });
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalValue = stat.textContent;
+                        if (finalValue.includes('99.9%')) {
+                            animateNumber(stat, 0, 99.9, '%');
+                        } else if (finalValue.includes('10M+')) {
+                            animateNumber(stat, 0, 10, 'M+');
+                        } else if (finalValue.includes('<50ms')) {
+                            animateNumber(stat, 0, 50, 'ms', '<');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        function animateNumber(element, start, end, suffix = '', prefix = '') {
+            let current = start;
+            const increment = end / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = prefix + current.toFixed(1) + suffix;
+            }, 30);
+        }
+
+        // Add floating animation to notification demo
+        setInterval(() => {
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach((notification, index) => {
+                setTimeout(() => {
+                    notification.style.animation = 'none';
+                    notification.offsetHeight; // Trigger reflow
+                    notification.style.animation = 'slideInUp 0.5s ease-out';
+                }, index * 200);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>
