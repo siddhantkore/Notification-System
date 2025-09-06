@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,10 @@ public class HealthController {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> healthCheck() {
 
@@ -34,7 +40,7 @@ public class HealthController {
         }
 
         try {
-            // Check Kafka connection
+            // Check Kafka connection // not correct
             kafkaTemplate.getProducerFactory().createProducer().close();
             health.put("kafka", "UP");
         } catch (Exception e) {
