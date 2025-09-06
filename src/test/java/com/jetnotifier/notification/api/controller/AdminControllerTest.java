@@ -1,7 +1,6 @@
 package com.jetnotifier.notification.api.controller;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;

@@ -3,6 +3,8 @@ package com.jetnotifier.notification.domain.entity;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +15,8 @@ import com.jetnotifier.notification.domain.enums.NotificationPriority;
 import com.jetnotifier.notification.domain.enums.NotificationType;
 
 
+@Setter
+@Getter
 @Document(collection = "notifications")
 public class Notification {
     
@@ -74,144 +78,6 @@ public class Notification {
         this.priority = NotificationPriority.MEDIUM;
     }
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public NotificationType getType() {
-		return type;
-	}
-
-	public void setType(NotificationType type) {
-		this.type = type;
-	}
-
-	public NotificationPriority getPriority() {
-		return priority;
-	}
-
-	public void setPriority(NotificationPriority priority) {
-		this.priority = priority;
-	}
-
-	public NotificationStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(NotificationStatus status) {
-		this.status = status;
-	}
-
-	public String getTemplateId() {
-		return templateId;
-	}
-
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
-	}
-
-	public Map<String, Object> getChannelConfig() {
-		return channelConfig;
-	}
-
-	public void setChannelConfig(Map<String, Object> channelConfig) {
-		this.channelConfig = channelConfig;
-	}
-
-	public Map<String, Object> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(Map<String, Object> metadata) {
-		this.metadata = metadata;
-	}
-
-	public LocalDateTime getScheduledAt() {
-		return scheduledAt;
-	}
-
-	public void setScheduledAt(LocalDateTime scheduledAt) {
-		this.scheduledAt = scheduledAt;
-	}
-
-	public LocalDateTime getSentAt() {
-		return sentAt;
-	}
-
-	public void setSentAt(LocalDateTime sentAt) {
-		this.sentAt = sentAt;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public Integer getRetryCount() {
-		return retryCount;
-	}
-
-	public void setRetryCount(Integer retryCount) {
-		this.retryCount = retryCount;
-	}
-
-	public Integer getMaxRetries() {
-		return maxRetries;
-	}
-
-	public void setMaxRetries(Integer maxRetries) {
-		this.maxRetries = maxRetries;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-    
-    
 }
 /*
 {
