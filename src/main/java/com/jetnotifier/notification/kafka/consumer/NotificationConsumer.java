@@ -7,17 +7,20 @@ import com.jetnotifier.notification.domain.enums.NotificationStatus;
 import com.jetnotifier.notification.exception.ConsumerException;
 import com.jetnotifier.notification.repository.NotificationRepository;
 import com.jetnotifier.notification.repository.UserRepository;
+import com.jetnotifier.notification.utils.NotificationChannelRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class NotificationConsumer {
 
-    private final Map<String, NotificationChannel> channelMap;
+    private final NotificationChannelRegistry registry;
     
     private final UserRepository userRepository;
     
@@ -25,11 +28,11 @@ public class NotificationConsumer {
 
     @Autowired
     public NotificationConsumer(
-            Map<String, NotificationChannel> channelMap,
+            NotificationChannelRegistry registry,
             UserRepository userRepository,
             NotificationRepository notificationRepository
     ) {
-        this.channelMap = channelMap;
+        this.registry = registry;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
     }
@@ -58,7 +61,7 @@ public class NotificationConsumer {
 
             // Resolve channel
             String typeKey = notification.getType().name(); // e.g., EMAIL
-            NotificationChannel channel = channelMap.get(typeKey);
+            NotificationChannel channel = registry.getChannel(typeKey);
 
             if (channel == null) {
                 throw new ConsumerException("No channel found for type: " + typeKey);
@@ -76,7 +79,6 @@ public class NotificationConsumer {
 			}
 
         } catch (Exception ex) {
-        	
             ex.printStackTrace();
             notification.setStatus(NotificationStatus.FAILED);
 			notification.setRetryCount(notification.getRetryCount()+1);

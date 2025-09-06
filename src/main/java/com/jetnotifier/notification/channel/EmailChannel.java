@@ -27,7 +27,7 @@ public class EmailChannel implements NotificationChannel {
             message.setTo(user.getEmail());
             message.setSubject(notification.getTitle());
             message.setText(notification.getMessage());
-            message.setFrom("noreply@jetnotifier.com"); // Consider Configurable and fetch from external sources instead of hard coding
+            message.setFrom("megastorage2112@gmail.com"); // Consider Configurable and fetch from external sources instead of hard coding
             
             mailSender.send(message);
             return true;
