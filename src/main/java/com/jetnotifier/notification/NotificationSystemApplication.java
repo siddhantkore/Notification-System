@@ -10,8 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class NotificationSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NotificationSystemApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(NotificationSystemApplication.class, args);
+    }
 }

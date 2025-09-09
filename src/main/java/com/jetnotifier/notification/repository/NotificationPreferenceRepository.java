@@ -1,16 +1,14 @@
 package com.jetnotifier.notification.repository;
 
+import com.jetnotifier.notification.domain.entity.NotificationPreference;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.jetnotifier.notification.domain.entity.NotificationPreference;
+public interface NotificationPreferenceRepository
+        extends MongoRepository<NotificationPreference, String> {
 
-public interface NotificationPreferenceRepository extends MongoRepository<NotificationPreference, String> {
+    List<NotificationPreference> findByUserId(String userId);
 
-	List<NotificationPreference> findByUserId(String userId);
-
-	Optional<NotificationPreference> findById(String id);
-
+    Optional<NotificationPreference> findById(String id);
 }

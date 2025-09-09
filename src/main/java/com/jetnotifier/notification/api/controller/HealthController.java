@@ -1,5 +1,7 @@
 package com.jetnotifier.notification.api.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
@@ -8,29 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/health")
 public class HealthController {
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    @Autowired private MongoTemplate mongoTemplate;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
+    @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
-     * 
      * @return
      */
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> healthCheck() {
 
         Map<String, Object> health = new HashMap<>();
-        
+
         try {
             // Check MongoDB connection
             mongoTemplate.getDb().runCommand(new org.bson.Document("ping", 1));
@@ -49,7 +44,7 @@ public class HealthController {
 
         health.put("status", "UP");
         health.put("service", "notification-system");
-        
+
         return ResponseEntity.ok(health);
     }
 }

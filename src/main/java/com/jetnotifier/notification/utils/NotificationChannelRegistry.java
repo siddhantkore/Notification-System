@@ -1,13 +1,12 @@
 package com.jetnotifier.notification.utils;
 
 import com.jetnotifier.notification.channel.NotificationChannel;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Component
@@ -16,7 +15,9 @@ public class NotificationChannelRegistry {
 
     @Autowired
     public NotificationChannelRegistry(List<NotificationChannel> channelMap) {
-        this.channelMap = channelMap.stream().collect(Collectors.toMap(NotificationChannel::getChannelType, c->c));
+        this.channelMap =
+                channelMap.stream()
+                        .collect(Collectors.toMap(NotificationChannel::getChannelType, c -> c));
     }
 
     public NotificationChannel getChannel(String type) {

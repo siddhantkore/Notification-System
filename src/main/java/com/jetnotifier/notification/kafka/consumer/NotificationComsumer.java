@@ -1,5 +1,3 @@
 package com.jetnotifier.notification.kafka.consumer;
 
-public interface NotificationComsumer {
-
-}
+public interface NotificationComsumer {}
