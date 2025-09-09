@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 public class DeadLetterConsumer {
 
     @KafkaListener(
-        topics = "${kafka.topic.dlq}",
-        groupId = "notification-group",
-        containerFactory = "kafkaListenerContainerFactory"
-    )
+            topics = "${kafka.topic.dlq}",
+            groupId = "notification-group",
+            containerFactory = "kafkaListenerContainerFactory")
     public void consumeFromDLQ(Object failedRecord) {
         System.out.println("Received message from DLQ: " + failedRecord);
         // Optionally log to file, alert, or store in a failed_notifications collection

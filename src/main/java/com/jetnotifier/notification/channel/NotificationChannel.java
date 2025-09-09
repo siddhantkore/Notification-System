@@ -5,5 +5,6 @@ import com.jetnotifier.notification.domain.entity.User;
 
 public interface NotificationChannel {
     boolean send(Notification notification, User user);
+
     String getChannelType();
 }

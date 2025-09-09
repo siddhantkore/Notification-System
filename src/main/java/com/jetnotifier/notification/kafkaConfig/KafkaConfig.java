@@ -1,5 +1,8 @@
 package com.jetnotifier.notification.kafkaConfig;
 
+import jakarta.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,22 +21,13 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.FixedBackOff;
 
-import jakarta.annotation.PostConstruct;
-
-import java.util.HashMap;
-import java.util.Map;
-
-
-
 @Configuration
 public class KafkaConfig {
 
-	
-	
     @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapServers;
-    
-//    @Value("${kafka.topic.email}")
+
+    //    @Value("${kafka.topic.email}")
     @Value("notification-email")
     private String emailTopic;
 
@@ -48,12 +42,10 @@ public class KafkaConfig {
 
     @Value("${kafka.topic.in_app}")
     private String inAppTopic;
-    
-    
+
     @Value("${kafka.topic.dlq}")
     private String dlqTopic;
 
-    
     @PostConstruct
     public void init() {
         System.out.println("KafkaConfig initialized:");
@@ -65,49 +57,48 @@ public class KafkaConfig {
         System.out.println("  inAppTopic: " + inAppTopic);
         System.out.println("  dlqTopic: " + dlqTopic);
     }
-    
+
     @Bean
-    public NewTopic emailTopic () {
+    public NewTopic emailTopic() {
         return TopicBuilder.name(emailTopic).build();
     }
 
     @Bean
-    public NewTopic pushTopic () {
-    	return TopicBuilder.name(pushTopic).build();
+    public NewTopic pushTopic() {
+        return TopicBuilder.name(pushTopic).build();
     }
-    
-    
+
     @Bean
-    public NewTopic smsTopic () {
-    	return TopicBuilder.name(smsTopic).build();
+    public NewTopic smsTopic() {
+        return TopicBuilder.name(smsTopic).build();
     }
-    
-    
+
     @Bean
-    public NewTopic webhookTopic () {
-    	return TopicBuilder.name(webhookTopic).build();
+    public NewTopic webhookTopic() {
+        return TopicBuilder.name(webhookTopic).build();
     }
+
     @Bean
-    public NewTopic inAppTopic () {
-    	return TopicBuilder.name(inAppTopic).build();
+    public NewTopic inAppTopic() {
+        return TopicBuilder.name(inAppTopic).build();
     }
-    
+
     @Bean
-    public NewTopic dlNewTopic () {
-    	return TopicBuilder.name(dlqTopic).build();
+    public NewTopic dlNewTopic() {
+        return TopicBuilder.name(dlqTopic).build();
     }
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
 
         Map<String, Object> configProps = new HashMap<>();
-        
+
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
-        
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -117,7 +108,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory () {
+    public ConsumerFactory<String, Object> consumerFactory() {
 
         Map<String, Object> props = new HashMap<>();
 
@@ -129,30 +120,29 @@ public class KafkaConfig {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         return new DefaultKafkaConsumerFactory<>(props);
-
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
-        DefaultErrorHandler errorHandler) {
+            DefaultErrorHandler errorHandler) {
 
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setCommonErrorHandler(errorHandler);
         return factory;
     }
-    
-    
+
     @Bean
     public DefaultErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate) {
 
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-            kafkaTemplate,
-            (record, ex) -> {
-                System.out.println("Recovering failed message to DLQ");
-                return new TopicPartition("notification-dlq", record.partition());
-            }
-        );
+        DeadLetterPublishingRecoverer recoverer =
+                new DeadLetterPublishingRecoverer(
+                        kafkaTemplate,
+                        (record, ex) -> {
+                            System.out.println("Recovering failed message to DLQ");
+                            return new TopicPartition("notification-dlq", record.partition());
+                        });
 
         //  Use FixedBackOff
         FixedBackOff fixedBackOff = new FixedBackOff(1000L, 3); // 1 sec delay, max 3 retries
@@ -161,6 +151,4 @@ public class KafkaConfig {
 
         return errorHandler;
     }
-
-
 }

@@ -5,33 +5,30 @@ import com.jetnotifier.notification.api.dto.response.NotificationResponse;
 import com.jetnotifier.notification.domain.entity.Notification;
 import com.jetnotifier.notification.domain.entity.User;
 import com.jetnotifier.notification.domain.enums.NotificationStatus;
+import com.jetnotifier.notification.kafka.producer.NotificationProducer;
 import com.jetnotifier.notification.repository.NotificationRepository;
 import com.jetnotifier.notification.repository.UserRepository;
-import com.jetnotifier.notification.kafka.producer.NotificationProducer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class AdminService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    @Autowired private NotificationRepository notificationRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
     private NotificationProducer notificationProducer;
 
-    @Autowired
-    private NotificationService notificationService;
-    
-    public AdminService (NotificationProducer notificationProducer) {
-    	this.notificationProducer = notificationProducer;
+    @Autowired private NotificationService notificationService;
+
+    public AdminService(NotificationProducer notificationProducer) {
+        this.notificationProducer = notificationProducer;
     }
 
     public Page<NotificationResponse> getAllNotifications(Pageable pageable) {
@@ -40,14 +37,16 @@ public class AdminService {
     }
 
     public NotificationResponse getNotificationById(String id) {
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
+        Notification notification =
+                notificationRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("Notification not found"));
         return convertToResponse(notification);
     }
 
     public void broadcastNotification(NotificationRequest request) {
         List<User> users = userRepository.findAll();
-        
+
         for (User user : users) {
             NotificationRequest userRequest = new NotificationRequest();
             userRequest.setUserId(user.getId());
@@ -59,39 +58,44 @@ public class AdminService {
             userRequest.setChannelConfig(request.getChannelConfig());
             userRequest.setMetadata(request.getMetadata());
             userRequest.setScheduledAt(request.getScheduledAt());
-            
+
             notificationService.createNotification(userRequest);
         }
     }
 
     public Map<String, Object> getNotificationStats() {
-    	
+
         Map<String, Object> stats = new HashMap<>();
-        
+
         long totalNotifications = notificationRepository.count();
         long sentNotifications = notificationRepository.countByStatus(NotificationStatus.SENT);
         long failedNotifications = notificationRepository.countByStatus(NotificationStatus.FAILED);
-        long pendingNotifications = notificationRepository.countByStatus(NotificationStatus.PENDING);
-        
+        long pendingNotifications =
+                notificationRepository.countByStatus(NotificationStatus.PENDING);
+
         stats.put("total", totalNotifications);
         stats.put("sent", sentNotifications);
         stats.put("failed", failedNotifications);
         stats.put("pending", pendingNotifications);
-        stats.put("successRate", totalNotifications > 0 ? (double) sentNotifications / totalNotifications * 100 : 0);
-        
+        stats.put(
+                "successRate",
+                totalNotifications > 0 ? (double) sentNotifications / totalNotifications * 100 : 0);
+
         return stats;
     }
 
     public void retryNotification(String id) {
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
-        
+        Notification notification =
+                notificationRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("Notification not found"));
+
         if (notification.getRetryCount() < notification.getMaxRetries()) {
             notification.setStatus(NotificationStatus.PENDING);
             notification.setRetryCount(notification.getRetryCount() + 1);
             notification.setErrorMessage(null);
             notificationRepository.save(notification);
-            
+
             notificationProducer.sendNotification(notification);
         } else {
             throw new RuntimeException("Maximum retry limit reached");

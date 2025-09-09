@@ -3,7 +3,6 @@ package com.jetnotifier.notification.channel;
 import com.jetnotifier.notification.domain.entity.Notification;
 import com.jetnotifier.notification.domain.entity.User;
 import com.jetnotifier.notification.domain.enums.NotificationType;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +17,9 @@ public class SMSChannel implements NotificationChannel {
 
             // This would typically integrate with Twilio, AWS SNS, or other SMS services
             // For demo purposes, we'll just log it
-            System.out.println("Sending SMS to " + user.getPhone() + ": " + notification.getMessage());
-            
+            System.out.println(
+                    "Sending SMS to " + user.getPhone() + ": " + notification.getMessage());
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();

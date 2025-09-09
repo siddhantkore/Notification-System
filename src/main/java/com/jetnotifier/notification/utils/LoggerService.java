@@ -11,12 +11,9 @@ public class LoggerService {
         return LoggerFactory.getLogger(clazz);
     }
 
-    
-  
     public void info(Logger logger, String message, Object... args) {
-       
-    	
-    	if (logger.isInfoEnabled()) {
+
+        if (logger.isInfoEnabled()) {
             logger.info(format(message, args));
         }
     }
@@ -26,15 +23,13 @@ public class LoggerService {
             logger.warn(format(message, args));
         }
     }
-    
-  
+
     public void error(Logger logger, String message, Object... args) {
         if (logger.isErrorEnabled()) {
             logger.error(format(message, args));
         }
     }
 
-    
     private String format(String message, Object... args) {
         return String.format(message, args);
     }

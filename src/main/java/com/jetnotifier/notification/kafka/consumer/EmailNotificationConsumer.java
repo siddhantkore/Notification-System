@@ -5,32 +5,29 @@ import com.jetnotifier.notification.domain.entity.Notification;
 import com.jetnotifier.notification.domain.entity.User;
 import com.jetnotifier.notification.exception.ConsumerException;
 import com.jetnotifier.notification.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-
-//Temp
+// Temp
 
 @Component
 public class EmailNotificationConsumer {
 
-    @Autowired
-    private EmailChannel emailChannel;
-    
-    @Autowired
-    UserRepository userRepository;
+    @Autowired private EmailChannel emailChannel;
+
+    @Autowired UserRepository userRepository;
 
     @KafkaListener(
-        topics = "${kafka.topic.email}",
-        groupId = "notification-group",
-        containerFactory = "kafkaListenerContainerFactory"
-    )
+            topics = "${kafka.topic.email}",
+            groupId = "notification-group",
+            containerFactory = "kafkaListenerContainerFactory")
     public void consume(Notification notification) {
         try {
-            User user = userRepository.findById(notification.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            User user =
+                    userRepository
+                            .findById(notification.getUserId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
 
             boolean sent = emailChannel.send(notification, user);
             if (!sent) {
