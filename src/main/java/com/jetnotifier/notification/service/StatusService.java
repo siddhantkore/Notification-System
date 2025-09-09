@@ -67,10 +67,13 @@ public class StatusService {
         systemStatus.put("failed", failedNotifications);
         systemStatus.put("pending", pendingNotifications);
         systemStatus.put("processing", processingNotifications);
-
-        systemStatus.put(
-                "successRate",
-                totalNotifications > 0 ? (double) sentNotifications / totalNotifications * 100 : 0);
+        double successRate;
+        if (totalNotifications > 0) {
+            successRate = (double) sentNotifications / totalNotifications * 100;
+        } else {
+            successRate = 0;
+        }
+        systemStatus.put("successRate", successRate);
 
         return systemStatus;
     }

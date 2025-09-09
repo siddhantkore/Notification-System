@@ -19,9 +19,9 @@ public class HealthController {
     @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
-     * @return
+     * @return return UP If everything is ok Till Kafka not configured
      */
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<Map<String, Object>> healthCheck() {
 
         Map<String, Object> health = new HashMap<>();

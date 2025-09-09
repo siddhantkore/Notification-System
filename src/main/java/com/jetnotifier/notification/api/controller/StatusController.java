@@ -16,8 +16,8 @@ public class StatusController {
     @Autowired private StatusService statusService;
 
     /**
-     * @param id
-     * @return
+     * @param id of notification of which we want to get status
+     * @return status such as SENT, FAILED
      */
     @GetMapping("/notification/{id}")
     public ResponseEntity<Map<String, Object>> getNotificationStatus(@PathVariable String id) {
@@ -26,8 +26,8 @@ public class StatusController {
     }
 
     /**
-     * @param userId
-     * @return
+     * @param userId for which to find stats
+     * @return stats about the user notification
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getUserNotificationStats(
@@ -39,7 +39,7 @@ public class StatusController {
     }
 
     /**
-     * @return
+     * @return get system info
      */
     @GetMapping("/system")
     public ResponseEntity<Map<String, Object>> getSystemStatus() {

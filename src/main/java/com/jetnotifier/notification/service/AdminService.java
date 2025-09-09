@@ -77,9 +77,13 @@ public class AdminService {
         stats.put("sent", sentNotifications);
         stats.put("failed", failedNotifications);
         stats.put("pending", pendingNotifications);
-        stats.put(
-                "successRate",
-                totalNotifications > 0 ? (double) sentNotifications / totalNotifications * 100 : 0);
+        double successRate;
+        if (totalNotifications > 0) {
+            successRate = (double) sentNotifications / totalNotifications * 100;
+        } else {
+            successRate = 0;
+        }
+        stats.put("successRate", successRate);
 
         return stats;
     }
