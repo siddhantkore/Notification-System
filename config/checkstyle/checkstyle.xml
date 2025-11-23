@@ -24,15 +24,17 @@
         <module name="MissingOverride"/>
         <module name="UnusedImports"/>
         <module name="AvoidStarImport"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
         <module name="ImportOrder">
             <property name="option" value="under"/>
         </module>
         <module name="AnnotationLocation"/>
         <module name="AnnotationUseStyle"/>
         <module name="EmptyCatchBlock"/>
-        <module name="IllegalCatch">
-            <property name="illegalClassNames" value="java.lang.Exception, java.lang.Throwable"/>
-        </module>
+<!--        <module name="IllegalCatch">-->
+<!--            <property name="illegalClassNames" value="java.lang.Exception, java.lang.Throwable"/>-->
+<!--        </module>-->
         <module name="MutableException"/>
         <module name="NeedBraces"/>
         <module name="LeftCurly"/>
@@ -59,10 +61,10 @@
         <module name="ParameterNumber">
             <property name="max" value="7"/>
         </module>
-        <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1,0,1,0.0,1.0,100"/>
-            <property name="ignoreAnnotation" value="true"/>
-        </module>
+<!--        <module name="MagicNumber">-->
+<!--            <property name="ignoreNumbers" value="-1,0,1,0.0,1.0,100"/>-->
+<!--            <property name="ignoreAnnotation" value="true"/>-->
+<!--        </module>-->
         <module name="AvoidInlineConditionals"/>
         <module name="AvoidStarImport"/>
         <module name="IllegalType">

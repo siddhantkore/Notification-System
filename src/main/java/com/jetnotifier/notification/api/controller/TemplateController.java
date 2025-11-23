@@ -57,6 +57,7 @@ public class TemplateController {
 
     /**
      * @param id of old template and new template itself
+     * @param template the new template
      * @return will update existing templates by searching it by its id
      */
     @PutMapping("/{id}")
@@ -79,6 +80,7 @@ public class TemplateController {
 
     /**
      * @param type of template i.e email, sms
+     * @param pageable for paging
      * @return templates
      */
     @GetMapping("/type/{type}")

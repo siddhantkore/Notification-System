@@ -7,13 +7,13 @@ public class ChannelException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String error = "CHANNEL_EXCEPTION";
+    private static final String ERROR = "CHANNEL_EXCEPTION";
 
     public ChannelException(String message) {
-        super(error);
+        super(ERROR);
     }
 
     public ChannelException() {
-        super(error);
+        super(ERROR);
     }
 }

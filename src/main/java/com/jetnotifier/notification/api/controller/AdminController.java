@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author siddhant kore
- */
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "*")
@@ -30,8 +27,7 @@ public class AdminController {
 
     /**
      * @param pageable for pagination
-     * @return return saved notifications from database
-     * {@code @route} /api/admin/notifications
+     * @return return saved notifications from database {@code @route} /api/admin/notifications
      */
     @GetMapping("/notifications")
     public ResponseEntity<Page<NotificationResponse>> getAllNotifications(Pageable pageable) {
@@ -40,8 +36,7 @@ public class AdminController {
 
     /**
      * @param id for which we are getting Notification
-     * @return Notification of specified id
-     * {@code @route} /api/admin/notifications/{id}
+     * @return Notification of specified id {@code @route} /api/admin/notifications/{id}
      */
     @GetMapping("/notifications/{id}")
     public ResponseEntity<NotificationResponse> getNotificationById(@PathVariable String id) {
@@ -50,8 +45,7 @@ public class AdminController {
 
     /**
      * @param request Notification entity
-     * @return ok
-     * {@code @route} /api/admin/notifications/broadcast
+     * @return ok {@code @route} /api/admin/notifications/broadcast
      */
     @PostMapping("/notifications/broadcast")
     public ResponseEntity<String> broadcastNotification(
@@ -62,8 +56,7 @@ public class AdminController {
 
     /**
      * @implNote Not Ready yet
-     * @return Notification statistics
-     * {@code @route} /api/admin/notifications/stats
+     * @return Notification statistics {@code @route} /api/admin/notifications/stats
      */
     @GetMapping("/notifications/stats")
     public ResponseEntity<Map<String, Object>> getNotificationStats() {
@@ -71,8 +64,8 @@ public class AdminController {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id of notification
+     * @return will retry sending specified Notification
      * @route /api/admin/notifications/{id}/retry
      */
     @PostMapping("/notifications/{id}/retry")
@@ -82,8 +75,8 @@ public class AdminController {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id of Notification
+     * @return delete the Specified Notification from Database
      * @route /api/admin/notifications/{id}
      */
     @DeleteMapping("/notifications/{id}")

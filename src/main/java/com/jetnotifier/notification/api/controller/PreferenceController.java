@@ -6,7 +6,15 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/preferences")
@@ -17,7 +25,7 @@ public class PreferenceController {
 
     /**
      * @param userId
-     * @return
+     * @return get preference of user
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationPreference>> getUserPreferences(
@@ -28,7 +36,7 @@ public class PreferenceController {
 
     /**
      * @param preference
-     * @return
+     * @return pass
      */
     @PostMapping
     public ResponseEntity<NotificationPreference> createPreference(
@@ -40,7 +48,7 @@ public class PreferenceController {
     /**
      * @param id
      * @param preference
-     * @return
+     * @return pass
      */
     @PutMapping("/{id}")
     public ResponseEntity<NotificationPreference> updatePreference(
@@ -51,7 +59,7 @@ public class PreferenceController {
 
     /**
      * @param id
-     * @return
+     * @return pass
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePreference(@PathVariable String id) {
